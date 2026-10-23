@@ -593,6 +593,15 @@ fn stamps_are_drawn_in_their_language() {
     .unwrap();
     assert!(!ap_content(&doc, &list(&doc, 0)[i]).contains('?'), "a Polish name is drawn");
     assert!(appearance::undrawable_text(&list(&doc, 0)[i]).is_none(), "and is not reported as undrawable");
+    let shape =
+        Shape::Stamp { rect: [100.0, 400.0, 300.0, 442.0], stamp: StampKind::DynApproved, lang: StampLang::Pl, by: Some("Łukasz 张".into()) };
+    let i = add_annotation(
+        &mut doc,
+        &NewAnnotation { page: 0, style: Style::default_for(&shape), shape, contents: String::new(), author: "Łukasz".into() },
+        &Meta::default(),
+    )
+    .unwrap();
+    assert_eq!(appearance::undrawable_text(&list(&doc, 0)[i]).map(|u| u.1), Some('张'), "only the letter with no glyph is reported");
     assert_eq!(StampLang::from_code("pt-br"), StampLang::Pt);
     assert_eq!(StampLang::from_code("pt-pt"), StampLang::PtPt);
     assert_eq!(StampLang::from_code("ja"), StampLang::En, "no translation falls back to English");

@@ -288,7 +288,6 @@ fn text_turn(d: &Dict) -> i64 {
 /// it can be drawn.
 pub fn undrawable_text(d: &Dict) -> Option<(&'static str, char)> {
     let text = |key: &[u8]| d.get(key).and_then(Object::as_string).map(PdfString::to_text);
-    let stamp = d.name(b"Subtype") == Some(b"Stamp");
     let (what, text) = match d.name(b"Subtype")? {
         b"FreeText" => ("the comment's text", text(b"Contents")?),
         b"Line" | b"PolyLine" | b"Polygon" => ("the measurement label", text(b"PCMeasureValue")?),
@@ -297,8 +296,12 @@ pub fn undrawable_text(d: &Dict) -> Option<(&'static str, char)> {
         b"Redact" => ("the redaction's overlay text", text(b"OverlayText")?),
         _ => return None,
     };
-    // A stamp's text may use the extra Latin letters its own encoding draws ([`StampEncoding`]).
-    let text = if stamp { fold_extra(&text) } else { text };
+    if d.name(b"Subtype") == Some(b"Stamp") {
+        // The same encoding [`stamp`] draws with: its label's and "By" line's extra Latin letters.
+        let lang = d.name(b"PCLang").and_then(|n| std::str::from_utf8(n).ok()).map_or(crate::StampLang::En, crate::StampLang::from_code);
+        let label = d.name(b"Name").and_then(crate::StampKind::from_name).map_or("", |k| k.label_in(lang));
+        return Some((what, StampEncoding::new(&[label, &text]).first_undrawable(&text)?));
+    }
     Some((what, first_undrawable(&text)?))
 }
 
@@ -909,6 +912,11 @@ impl StampEncoding {
             }
         }
         Self { extra }
+    }
+
+    /// The first character of `s` this encoding can't draw.
+    fn first_undrawable(&self, s: &str) -> Option<char> {
+        s.chars().find(|c| !self.extra.iter().any(|e| e.0 == *c) && first_undrawable(&c.to_string()).is_some())
     }
 
     fn encode(&self, s: &str) -> Vec<u8> {

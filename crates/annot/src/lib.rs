@@ -161,7 +161,27 @@ pub enum StampLang {
 }
 
 impl StampLang {
-    pub const ALL: [StampLang; 19] = [StampLang::En, StampLang::Fr, StampLang::De, StampLang::Es, StampLang::It, StampLang::Pt, StampLang::Ca, StampLang::Nb, StampLang::Fi, StampLang::Id, StampLang::PtPt, StampLang::Cs, StampLang::Pl, StampLang::Sl, StampLang::Tr, StampLang::Lt, StampLang::Sq, StampLang::Ro, StampLang::Hu];
+    pub const ALL: [StampLang; 19] = [
+        StampLang::En,
+        StampLang::Fr,
+        StampLang::De,
+        StampLang::Es,
+        StampLang::It,
+        StampLang::Pt,
+        StampLang::Ca,
+        StampLang::Nb,
+        StampLang::Fi,
+        StampLang::Id,
+        StampLang::PtPt,
+        StampLang::Cs,
+        StampLang::Pl,
+        StampLang::Sl,
+        StampLang::Tr,
+        StampLang::Lt,
+        StampLang::Sq,
+        StampLang::Ro,
+        StampLang::Hu,
+    ];
 
     /// The language code of the UI catalog ("pt-br") or of `/PCLang`; unknown codes are English.
     pub fn from_code(code: &str) -> Self {

@@ -535,8 +535,12 @@ fn author_subject_and_note_icon_change() {
 #[test]
 fn stamps_draw_their_label_and_by_line() {
     let mut doc = fixture();
-    let shape =
-        Shape::Stamp { rect: [100.0, 100.0, 260.0, 142.0], stamp: StampKind::DynApproved, lang: StampLang::En, by: Some("By Ada at 2:14 pm, Oct 02, 2026".into()) };
+    let shape = Shape::Stamp {
+        rect: [100.0, 100.0, 260.0, 142.0],
+        stamp: StampKind::DynApproved,
+        lang: StampLang::En,
+        by: Some("By Ada at 2:14 pm, Oct 02, 2026".into()),
+    };
     let i = add_annotation(
         &mut doc,
         &NewAnnotation { page: 0, style: Style::default_for(&shape), shape, contents: String::new(), author: "Ada".into() },
@@ -579,7 +583,8 @@ fn stamps_are_drawn_in_their_language() {
     .unwrap();
     let ap = ap_content(&doc, &list(&doc, 0)[i]);
     assert!(!ap.contains('?'), "every Czech letter has a glyph: {ap}");
-    let shape = Shape::Stamp { rect: [100.0, 300.0, 300.0, 342.0], stamp: StampKind::DynApproved, lang: StampLang::Pl, by: Some("Przez Łukasz".into()) };
+    let shape =
+        Shape::Stamp { rect: [100.0, 300.0, 300.0, 342.0], stamp: StampKind::DynApproved, lang: StampLang::Pl, by: Some("Przez Łukasz".into()) };
     let i = add_annotation(
         &mut doc,
         &NewAnnotation { page: 0, style: Style::default_for(&shape), shape, contents: String::new(), author: "Łukasz".into() },
@@ -1272,8 +1277,12 @@ fn comment_text_the_standard_fonts_cannot_draw_is_kept_and_marked() {
     )
     .unwrap();
     assert_eq!(mark(&doc, f), Some('张'));
-    let stamp =
-        Shape::Stamp { rect: [100.0, 100.0, 260.0, 142.0], stamp: StampKind::DynApproved, lang: StampLang::En, by: Some("By 张三 at 2:14 pm, Oct 02, 2026".into()) };
+    let stamp = Shape::Stamp {
+        rect: [100.0, 100.0, 260.0, 142.0],
+        stamp: StampKind::DynApproved,
+        lang: StampLang::En,
+        by: Some("By 张三 at 2:14 pm, Oct 02, 2026".into()),
+    };
     let s = add_annotation(
         &mut doc,
         &NewAnnotation { page: 0, style: Style::default_for(&stamp), shape: stamp, contents: String::new(), author: "张三".into() },

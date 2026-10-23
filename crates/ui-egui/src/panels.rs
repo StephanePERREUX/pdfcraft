@@ -491,7 +491,8 @@ fn stamp_palette(app: &mut PdfCraftApp, ui: &mut egui::Ui, t: &Tokens) {
                     ui.painter().rect(chip, CornerRadius::same(5), col.gamma_multiply(0.1), Stroke::new(1.5, col), egui::StrokeKind::Inside);
                     let y = if group == StampGroup::Dynamic { chip.center().y - 4.0 } else { chip.center().y };
                     let font = theme::semibold(11.0);
-                    let shown = crate::widgets::fit_line(kind.label_in(lang), (chip.width() - 10.0).max(0.0), |s| crate::widgets::text_width(ui, s, &font));
+                    let shown =
+                        crate::widgets::fit_line(kind.label_in(lang), (chip.width() - 10.0).max(0.0), |s| crate::widgets::text_width(ui, s, &font));
                     ui.painter().with_clip_rect(chip.shrink(3.0)).text(egui::pos2(chip.center().x, y), Align2::CENTER_CENTER, shown, font, col);
                     if group == StampGroup::Dynamic {
                         let by = lang.by_placeholder();
